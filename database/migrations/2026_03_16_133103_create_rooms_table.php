@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->integer("total_seats");
+            $table->boolean("is_vip")->default(false);
             $table->timestamps();
         });
     }
