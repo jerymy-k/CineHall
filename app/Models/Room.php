@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Movie extends Model
+class Room extends Model
 {
-    protected $table = "movies";
+    protected $table = "rooms";
 
     protected $fillable = [
-        "title",
-        "description",
-        "image",
-        "duration",
-        "min_age",
-        "trailer"
+        "name",
+        "total_seats",
+        "is_vip"
     ];
 
     public function sessions () : HasMany {
