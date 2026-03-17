@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Movie extends Model
 {
@@ -16,4 +17,8 @@ class Movie extends Model
         "min_age",
         "trailer"
     ];
+
+    public function sessions () : HasMany {
+        return $this->hasMany(Session::class);
+    }
 }

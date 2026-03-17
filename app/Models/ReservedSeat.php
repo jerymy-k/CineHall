@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReservedSeat extends Model
 {
@@ -11,4 +12,8 @@ class ReservedSeat extends Model
     protected $fillable = [
         "seat_number"
     ];
+
+    public function reservation () : BelongsTo {
+        return $this->belongsTo(Reservation::class);
+    }
 }
