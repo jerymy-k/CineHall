@@ -38,24 +38,16 @@ class MovieController extends Controller
             'trailer' => 'nullable|url',
         ]);
 
-        if ($validatedData) {
+        Movie::create([
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'image' => $validatedData['image'],
+            'duration' => $validatedData['duration'],
+            'min_age' => $validatedData['min_age'],
+            'trailer' => $validatedData['trailer'],
+        ]);
 
-            $user = auth('api')->user();
-            if ($user->is_admin) {
-
-                Movie::create([
-                    'title' => $validatedData['title'],
-                    'description' => $validatedData['description'],
-                    'image' => $validatedData['image'],
-                    'duration' => $validatedData['duration'],
-                    'min_age' => $validatedData['min_age'],
-                    'trailer' => $validatedData['trailer'],
-                ]);
-
-                return response()->json(['Message' => 'Creation is Successfully'], 201);
-            }
-        }
-        return response()->json(['Error' => 'Something Wrong'], 500);
+        return response()->json(['Message' => 'Creation is Successfully'], 201);
     }
 
     /**
@@ -63,7 +55,16 @@ class MovieController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $movie = Movie::where('id', $id)->first();
+
+        if ($movie) {
+            return response()->json([
+                'movie' => $movie
+            ], 200);
+        }
+
+        return response()->json(['Error' => 'Movie Not Found']);
+
     }
 
     /**
@@ -71,7 +72,25 @@ class MovieController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validatedData = $request->validate([
+            'title' => 'required|string|min:1|max:255',
+            'description' => 'required|string|min:10',
+            'image' => 'url|nullable',
+            'duration' => 'required|integer|min:1|max:500',
+            'min_age' => 'required|integer|min:0|max:100',
+            'trailer' => 'nullable|url',
+        ]);
+
+        $movie = Movie::where('id', $id)->first();
+
+        if (!$movie) {
+            return response()->json(['Error' => 'Movie Not Found'], 404);
+        }
+
+        $movie->update($validatedData);
+
+
+        return response()->json(['message' => 'Movie Updated Success'], 200);
     }
 
     /**
@@ -79,6 +98,11 @@ class MovieController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $movie = Movie::where('id', $id)->delete();
+
+        if ($movie) {
+            return response()->json(['Message' => 'Movie Deleted Successfully'],200);
+        }
+        return response()->json(['Error' => 'Movie Not Found'],404);
     }
 }

@@ -19,13 +19,16 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/admin/users', [AuthController::class, 'getAll']);
         Route::patch('/admin/users/ban/{id}', [AuthController::class, 'ban']);
         Route::patch('/admin/users/unban/{id}', [AuthController::class, 'unban']);
+
         Route::post('admin/movie', [MovieController::class, 'store']);
-        Route::get('admin/movie/update/{id}', [MovieController::class, 'update']);
+        Route::patch('admin/movie/update/{id}', [MovieController::class, 'update']);
+        Route::delete('admin/movie/delete/{id}', [MovieController::class, 'destroy']);
     });
 
+    Route::get('/movies/{id}', [MovieController::class, 'show']);
     Route::get('/movies', [MovieController::class, 'index']);
-    Route::get('/movies', [MovieController::class, 'index']);
-    Route::get('/movies', [MovieController::class, 'index']);
+    // Route::get('/movies', [MovieController::class, 'index']);
+    // Route::get('/movies', [MovieController::class, 'index']);
 
 
 });
