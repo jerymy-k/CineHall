@@ -14,7 +14,9 @@ class Session extends Model
         "start_at",
         "end_at",
         "language",
-        "price"
+        "price",
+        "room_id",
+        "movie_id",
     ];
 
     public function room () : BelongsTo {

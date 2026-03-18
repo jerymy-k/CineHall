@@ -3,6 +3,7 @@
 // use Illuminate\Http\Request;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\SessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/register', [AuthController::class, 'store']);
@@ -23,11 +24,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('admin/movie', [MovieController::class, 'store']);
         Route::patch('admin/movie/update/{id}', [MovieController::class, 'update']);
         Route::delete('admin/movie/delete/{id}', [MovieController::class, 'destroy']);
+        Route::post('/sessions', [SessionController::class, 'store']);
     });
 
     Route::get('/movies/{id}', [MovieController::class, 'show']);
     Route::get('/movies', [MovieController::class, 'index']);
-    // Route::get('/movies', [MovieController::class, 'index']);
+
+
     // Route::get('/movies', [MovieController::class, 'index']);
 
 
