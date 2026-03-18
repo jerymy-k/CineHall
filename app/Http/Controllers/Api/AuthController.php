@@ -68,18 +68,6 @@ class AuthController extends Controller
         return response()->json(['Error' => 'Something Wrong Try Again'], 500);
     }
 
-    public function forgotPassword(Request $request)
-    {
-        // Pending
-    }
-
-
-    public function resetPassword(Request $request)
-    {
-        // Pending
-    }
-
-
     public function login(Request $request)
     {
         $user = $request->only('email', 'password');
@@ -100,18 +88,6 @@ class AuthController extends Controller
         Auth::guard('api')->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
-
-    // public function destroy(string $id)
-    // {
-
-    // $user = User::where('id' , $id)->delete();
-    // if($user){
-    //     Auth::guard('api')->logout();
-    //     return response()->json(['message' => 'User Deleted Successfully']);
-    // }
-    // return response()->json(['Error' , 'something Wrong'],500);
-
-    // }
 
     /**
      * Update the specified resource in storage.
