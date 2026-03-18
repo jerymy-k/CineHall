@@ -24,14 +24,18 @@ Route::middleware('auth:api')->group(function () {
         Route::post('admin/movie', [MovieController::class, 'store']);
         Route::patch('admin/movie/update/{id}', [MovieController::class, 'update']);
         Route::delete('admin/movie/delete/{id}', [MovieController::class, 'destroy']);
+      
         Route::post('/sessions', [SessionController::class, 'store']);
+        Route::get('/sessions', [SessionController::class, 'index']);
+        Route::patch('/sessions/{id}', [SessionController::class, 'update']);
+        Route::get('/sessions/search/{id}', [SessionController::class, 'show']);
+        Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
     });
 
     Route::get('/movies/{id}', [MovieController::class, 'show']);
     Route::get('/movies', [MovieController::class, 'index']);
 
 
-    // Route::get('/movies', [MovieController::class, 'index']);
 
 
 });
