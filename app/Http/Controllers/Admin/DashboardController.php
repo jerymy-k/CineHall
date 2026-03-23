@@ -8,9 +8,24 @@ use App\Models\Session;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Attributes as OA;
 
 class DashboardController extends Controller
 {
+
+    #[OA\Get(
+        path: "/admin/dashboard",
+        summary: "Admin dashboard stats",
+        security: [["bearerAuth" => []]],
+        tags: ["Admin"],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Dashboard data"
+            )
+        ]
+    )]
+    
     public function index()
     {
         return response()->json([

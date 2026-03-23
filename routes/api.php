@@ -14,7 +14,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/profile', [AuthController::class, 'update']);
 
     Route::middleware('admin')->group(function () {
-        Route::get('/users  ', [AuthController::class, 'getAll']);
+        Route::get('/users', [AuthController::class, 'getAll']);
         Route::put('/users/ban/{id}', [AuthController::class, 'ban']);
         Route::put('/users/unban/{id}', [AuthController::class, 'unban']);
 
