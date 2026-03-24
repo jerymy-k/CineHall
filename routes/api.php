@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\PaimentController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/register', [AuthController::class, 'store']);
@@ -12,6 +13,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::put('/profile', [AuthController::class, 'update']);
+
+    // Payment
+    Route::post('/reservations/{reservation}/pay', [PaimentController::class, 'pay']);
 
     Route::middleware('admin')->group(function () {
         Route::get('/users', [AuthController::class, 'getAll']);
