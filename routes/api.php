@@ -15,6 +15,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Payment
     Route::post('/reservations/{reservation}/pay', [PaimentController::class, 'pay']);
+    Route::get('/reservations/{reservation}/ticket', [PaimentController::class, 'ticket']);
 
     Route::middleware('admin')->group(function () {
         Route::get('/users  ', [AuthController::class, 'getAll']);
