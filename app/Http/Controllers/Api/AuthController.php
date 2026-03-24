@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use OpenApi\Attributes as OA;
 use function PHPUnit\Framework\isEmpty;
 
 
@@ -21,6 +22,17 @@ class AuthController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    #[OA\Get(
+        path: "/users",
+        summary: "Get all users",
+        tags: ["Users"],
+        security: [["bearerAuth" => []]],
+        responses: [
+            new OA\Response(response: 200, description: "Users list")
+        ]
+    )]
+
     public function getAll()
     {
         $users = User::where('is_admin', false)
@@ -35,12 +47,31 @@ class AuthController extends Controller
             'status' => 'success',
             'count' => $users->count()
         ], 200);
-
     }
 
     /**
      * Store a newly created resource in storage.
      */
+    #[OA\Post(
+        path: "/auth/register",
+        summary: "Register a new user",
+        tags: ["Auth"],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["first_name", "last_name", "email", "password"],
+                properties: [
+                    new OA\Property(property: "first_name", type: "string"),
+                    new OA\Property(property: "last_name", type: "string"),
+                    new OA\Property(property: "email", type: "string"),
+                    new OA\Property(property: "password", type: "string"),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: "User created")
+        ]
+    )]
     public function store(StoreRequest $request)
     {
 
@@ -68,6 +99,24 @@ class AuthController extends Controller
         return response()->json(['Error' => 'Something Wrong Try Again'], 500);
     }
 
+    #[OA\Post(
+        path: "/auth/login",
+        summary: "Login user",
+        tags: ["Auth"],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["email", "password"],
+                properties: [
+                    new OA\Property(property: "email", type: "string"),
+                    new OA\Property(property: "password", type: "string"),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "JWT Token")
+        ]
+    )]
     public function login(Request $request)
     {
         $user = $request->only('email', 'password');
@@ -82,16 +131,38 @@ class AuthController extends Controller
             'token_type' => 'bearer'
         ], 200);
     }
-
+    #[OA\Post(
+        path: "/auth/logout",
+        summary: "Logout user",
+        tags: ["Auth"],
+        security: [["bearerAuth" => []]],
+        responses: [
+            new OA\Response(response: 200, description: "Logged out")
+        ]
+    )]
     public function logout()
     {
         Auth::guard('api')->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[OA\Put(
+        path: "/profile",
+        summary: "Update user profile",
+        tags: ["Auth"],
+        security: [["bearerAuth" => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: "first_name", type: "string"),
+                    new OA\Property(property: "last_name", type: "string"),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Profile updated")
+        ]
+    )]
     public function update(Request $request)
     {
         $validatedData = $request->validate([
@@ -117,6 +188,23 @@ class AuthController extends Controller
     /**
      * Remove the specified resource from storage.
      */
+    #[OA\Put(
+        path: "/users/ban/{id}",
+        summary: "Ban a user",
+        tags: ["Users"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "integer")
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "User banned")
+        ]
+    )]
     public function ban(string $id)
     {
         $user = User::where('id', $id)
@@ -136,6 +224,23 @@ class AuthController extends Controller
 
         return response()->json(['Message' => 'User Banned Success'], 200);
     }
+    #[OA\Put(
+        path: "/users/unban/{id}",
+        summary: "Unban a user",
+        tags: ["Users"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "integer")
+            )
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "User unbanned")
+        ]
+    )]
     public function unban(string $id)
     {
         $user = User::where('id', $id)
