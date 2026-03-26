@@ -29,6 +29,14 @@ class PaimentController extends Controller
             ], 400);
         }
 
+        // Check if expired
+        if ($reservation->expires_at && $reservation->expires_at->isPast()) {
+            $reservation->update(['status' => 'canceled']);
+            return response()->json([
+                'message' => 'Reservation expired. Cannot pay.',
+            ], 400);
+        }
+
         // Convert total_price to centimes (lowest currency unit for MAD)
         $amountInCentimes = (int) round($reservation->total_price * 100);
 
@@ -44,6 +52,12 @@ class PaimentController extends Controller
                 'amount'                  => $amountInCentimes,
                 'currency'                => config('cashier.currency', 'mad'),
                 'status'                  => 'pending',
+            ]);
+
+            // Mark reservation as paid upon successful payment intent creation
+            $reservation->update([
+                'status' => 'paid',
+                'expires_at' => null,
             ]);
 
             return response()->json([

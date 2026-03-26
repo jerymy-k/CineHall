@@ -11,13 +11,34 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Reservation extends Model
 {
     use HasFactory;
-    
+
     protected $table = "reservations";
 
     protected $fillable = [
         "status",
-        "total_price"
+        "total_price",
+        "expires_at"
     ];
+
+    /**
+     * Scope for expired pending reservations
+     */
+    public function scopeExpiredPending($query)
+    {
+        return $query->where('status', 'pending')
+                     ->where('expires_at', '<', now());
+    }
+
+    /**
+     * Scope for valid reservations
+     */
+    public function scopeValid($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('status', '!=', 'canceled')
+              ->orWhereNull('expires_at');
+        })->orWhere('status', 'paid');
+    }
 
     public function user () : BelongsTo {
         return $this->belongsTo(User::class);

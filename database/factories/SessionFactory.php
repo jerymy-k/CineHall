@@ -14,12 +14,13 @@ class SessionFactory extends Factory
 {
     public function definition(): array
     {
-        $start_date = fake()->dateTime();
+        $start_date = fake()->dateTimeBetween('now', '+30 days');
 
         return [
             "start_at" => $start_date,
-            "end_at" => fake()->dateTimeBetween($start_date, "+1 year"),
+            "end_at" => fake()->dateTimeBetween($start_date, $start_date->copy()->addHours(3)),
             "language" => fake()->randomElement(['en','zh','hi','es','fr','ar','bn','pt','ru','ur','de']),
+            "type" => fake()->randomElement(['normal', 'vip']),
             "price" => fake()->numberBetween(10, 1000),
             "room_id" => Room::factory(),
             "movie_id" => Movie::factory()
