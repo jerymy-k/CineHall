@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Session extends Model
 {
     use HasFactory;
-    
+
     protected $table = "movie_sessions";
 
     protected $fillable = [
         "start_at",
         "end_at",
         "language",
+        "type",
         "price"
     ];
 
